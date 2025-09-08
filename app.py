@@ -1,16 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Veritas: Fake News Detector (Streamlit Web App)
-
-This application provides a web interface to predict whether a news article
-is real or fake using a pre-trained machine learning model.
-
-To run this app:
-1. Make sure you have the required libraries:
-   pip install streamlit pandas numpy nltk scikit-learn
-2. Ensure 'model.pkl' and 'vectorizer.pkl' are in the same directory.
-3. Run the following command in your terminal:
-   streamlit run veritas_app.py
+Veritas: A Streamlit web app for fake news detection.
 """
 
 import streamlit as st
@@ -22,14 +12,12 @@ from nltk.stem.porter import PorterStemmer
 import base64
 import time
 
-# --- Page Configuration ---
 st.set_page_config(
     page_title="Veritas | Fake News Detector",
     page_icon="🛡️",
     layout="centered"
 )
 
-# --- NLTK Data Download ---
 @st.cache_resource
 def download_nltk_data():
     """Downloads necessary NLTK resources if not already present."""
@@ -45,7 +33,6 @@ def download_nltk_data():
 
 download_nltk_data()
 
-# --- Load Model and Vectorizer ---
 @st.cache_resource
 def load_resources():
     """Load the pre-trained model and TF-IDF vectorizer from disk."""
@@ -62,7 +49,6 @@ def load_resources():
 
 model, vectorizer, port_stem = load_resources()
 
-# --- Text Preprocessing Function ---
 def preprocess_text(content):
     """Preprocesses the input text in the same way as the training data."""
     if not port_stem or not content:
@@ -72,9 +58,7 @@ def preprocess_text(content):
     stemmed_words = [port_stem.stem(word) for word in stemmed_content.split() if word not in stopwords.words('english')]
     return ' '.join(stemmed_words)
 
-# --- UI Rendering ---
 
-# --- Custom CSS for Styling ---
 st.markdown("""
 <style>
     .stApp {
@@ -118,8 +102,6 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# --- Header with New Logo and Title ---
-# A new shield logo, Base64 encoded.
 logo_data_base64 = "PHN2ZyB3aWR0aD0iNjRweCIgaGVpZ2h0PSI2NHB4IiB2aWV3Qm94PSIwIDAgMjQgMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZmlsbD0iIzM0OThkYiI+PHBhdGggZD0iTTEyIDJMMiA1djZjMCA1LjU1IDMuODQgMTAuNzQgOSAxMiA1LjE2LTEuMjYgOS02LjQ1IDktMTJWNUwxMiAyeiBtLTEuMDYgMTQuNDRsLTMuNTQtMy41NCAxLjQxLTEuNDEgMi4xMiAyLjEyIDQuMjQtNC4yNCAxLjQxIDEuNDEtNS42NSA1LjY2eiIvPjwvc3ZnPg=="
 
 st.markdown(
@@ -136,13 +118,11 @@ st.subheader("Fake News Detector")
 st.write("Paste the news article text below to check if it's real or fake.")
 
 
-# --- Session State Initialization ---
 if 'user_input' not in st.session_state:
     st.session_state.user_input = ""
 if 'prediction_result' not in st.session_state:
     st.session_state.prediction_result = None
 
-# --- Input Text Area ---
 user_text = st.text_area(
     "Article Text",
     value=st.session_state.user_input,
@@ -152,14 +132,12 @@ user_text = st.text_area(
 )
 st.session_state.user_input = user_text
 
-# --- Buttons: Predict and Clear ---
 col1, col2 = st.columns([1, 1])
 with col1:
     predict_button = st.button("Analyze News", type="primary", use_container_width=True)
 with col2:
     clear_button = st.button("Clear & Reset", use_container_width=True)
 
-# --- Logic for Buttons ---
 if clear_button:
     st.session_state.user_input = ""
     st.session_state.prediction_result = None
@@ -176,7 +154,6 @@ if predict_button and model and vectorizer:
             prediction = model.predict(vectorized_text)
             st.session_state.prediction_result = prediction[0]
 
-# --- Display Result ---
 if st.session_state.prediction_result is not None:
     st.markdown("---")
     st.subheader("Analysis Result")
@@ -185,6 +162,11 @@ if st.session_state.prediction_result is not None:
     else:
         st.error("❌ This appears to be FAKE NEWS.")
 
-# --- Footer Removed ---
-# The "Built with Streamlit" footer has been removed.
+st.markdown("---")
+disclaimer_text = """
+**Disclaimer:** This is a demonstration model with known limitations.
+It was trained primarily on US political news and may produce inaccurate results
+for articles on other topics or from different global regions.
+"""
+st.caption(disclaimer_text)
 
