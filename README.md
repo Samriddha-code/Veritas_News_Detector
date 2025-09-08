@@ -1,0 +1,1 @@
+# Veritas_News_Detector
