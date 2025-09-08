@@ -1,5 +1,7 @@
 # Fake News Prediction Project
 
+**Live Demo:** [**Click here to try the app!**](https://veritasnewsdetector-nnxb7kapp6jspfutb7xd28j.streamlit.app/)
+
 This project contains a machine learning model built to classify news articles as either "Real" or "Fake". It utilizes Natural Language Processing (NLP) techniques to process text data and a Logistic Regression model to perform the classification, achieving an accuracy of over 98%.
 
 ---
